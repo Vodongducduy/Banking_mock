@@ -1,0 +1,43 @@
+package usecases
+
+import (
+	"banking/internal/user-service/dtos"
+	"banking/internal/user-service/models"
+	"banking/internal/user-service/repositorys"
+	"log"
+)
+
+type IAccountUsecase interface {
+	CreateAccount(dto *dtos.CreateAccountDTO) (*models.Account, error)
+}
+type AccountUsecase struct {
+	AccountRepository repositorys.IAccountRepository
+	UserRepository    repositorys.IUserRepository
+}
+
+func (a AccountUsecase) CreateAccount(dto *dtos.CreateAccountDTO) (*models.Account, error) {
+	var account models.Account
+	if err := account.HashPassword(dto.Password); err != nil {
+		log.Println("HashPassword: Error to hash password pkg usecase", err)
+		return nil, err
+	}
+	accountRep, errAcc := a.AccountRepository.CreateAccount(&account)
+	if errAcc != nil {
+		log.Println("CreateAccount: Error to create account pkg usecase", errAcc)
+		return nil, errAcc
+	}
+	var user models.User
+	user.Name = dto.Name
+	user.Phone = dto.Phone
+	user.AccountId = int(accountRep.ID)
+	_, errUser := a.UserRepository.CreateUser(&user)
+	if errUser != nil {
+		log.Println("CreateUser: Error to create account pkg usecase", errUser)
+		return nil, errUser
+	}
+	return accountRep, nil
+}
+
+func NewAccountUsecase(accountRepository repositorys.IAccountRepository, userRepository repositorys.IUserRepository) *AccountUsecase {
+	return &AccountUsecase{AccountRepository: accountRepository, UserRepository: userRepository}
+}
