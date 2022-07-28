@@ -1,0 +1,16 @@
+syntax="proto3";
+
+option go_package = "./packages/pb/auth";
+
+service IsAuth {
+  rpc IsAuth(IsAuthRequest) returns (IsAuthResponse);
+}
+
+message IsAuthRequest {
+  string token = 1;
+}
+
+message IsAuthResponse {
+  string role = 1;
+  int32 accountId = 2;
+}

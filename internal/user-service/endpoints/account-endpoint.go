@@ -15,10 +15,13 @@ type AccountEndpoint struct {
 }
 
 func (a *AccountEndpoint) SetUp() {
+
 	accountApi := a.Route.Group("api/account")
 	{
 		accountApi.POST("/", a.AccountController.CreateAccount)
+		accountApi.POST("/login", a.AccountController.GetAccount)
 	}
+
 }
 
 func NewAccountEndpoint(route *gin.Engine, accountController controllers.IAccountController) *AccountEndpoint {

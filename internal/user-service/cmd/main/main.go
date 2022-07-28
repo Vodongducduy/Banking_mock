@@ -1,6 +1,7 @@
 package main
 
 import (
+	grpc_client "banking/internal/user-service/cmd/grpc-client"
 	"banking/internal/user-service/controllers"
 	"banking/internal/user-service/database"
 	"banking/internal/user-service/endpoints"
@@ -22,6 +23,9 @@ func main() {
 	database.Connect(connectString)
 	database.Migrate()
 	r := route()
+
+	grpcClient := grpc_client.NewGRPCAuthClient()
+	authClient := grpcClient.SetUpCAuthClient()
 	//DI User
 	userRepo := repositorys.NewUserRepository(database.Instance)
 

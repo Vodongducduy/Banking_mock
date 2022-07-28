@@ -5,6 +5,6 @@ type CreateUserDTO struct {
 	Phone string `json:"phone" gorm:"unique"`
 }
 
-type GetUserByID struct {
-	UserId int `json:"user-id"`
+type GetUserByPhone struct {
+	Phone string `json:"Phone"`
 }

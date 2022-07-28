@@ -3,6 +3,7 @@ package repositorys
 import (
 	"banking/internal/user-service/dtos"
 	"banking/internal/user-service/models"
+	"banking/packages/customResponse"
 	"gorm.io/gorm"
 	"log"
 )
@@ -26,8 +27,17 @@ func (u *AccountRepository) CreateAccount(account *models.Account) (*models.Acco
 }
 
 func (u *AccountRepository) GetAccount(dto *dtos.GetAccountByIdDTO) (*models.Account, error) {
-	//TODO implement me
-	panic("implement me")
+	var account *models.Account
+	var count int64
+	record := u.db.Where("id = ?", dto.AccountId).Find(&account).Count(&count)
+	if record.Error != nil {
+		customResponse.FailErr("GetAccount: Fail to find", record.Error)
+		return nil, record.Error
+	}
+	if count == 0 {
+		return nil, nil
+	}
+	return account, nil
 }
 
 func NewAccountRepository(db *gorm.DB) *AccountRepository {

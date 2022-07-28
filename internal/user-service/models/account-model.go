@@ -24,7 +24,7 @@ func (a *Account) HashPassword(password string) error {
 }
 
 func (a *Account) CheckPassword(password string) error {
-	if err := bcrypt.CompareHashAndPassword([]byte(password), []byte(a.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(a.Password), []byte(password)); err != nil {
 		log.Println("CheckPassword: Error hash password", err)
 		return err
 	}

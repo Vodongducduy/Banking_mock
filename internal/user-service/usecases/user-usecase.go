@@ -7,7 +7,7 @@ import (
 )
 
 type IUserUsecase interface {
-	GetUser(dto *dtos.GetUserByID) (*models.User, error)
+	GetUser(dto *dtos.GetUserByPhone) (*models.User, error)
 }
 
 type UserUsecase struct {
@@ -18,7 +18,7 @@ func NewUserUsecase(userRepository repositorys.IUserRepository) *UserUsecase {
 	return &UserUsecase{UserRepository: userRepository}
 }
 
-func (u *UserUsecase) GetUser(dto *dtos.GetUserByID) (*models.User, error) {
+func (u *UserUsecase) GetUser(dto *dtos.GetUserByPhone) (*models.User, error) {
 	//TODO implement me
 	panic("implement me")
 }

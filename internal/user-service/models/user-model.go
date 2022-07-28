@@ -7,6 +7,6 @@ type User struct {
 	Name       string `json:"name" `
 	Address    string `json:"address"`
 	Phone      string `json:"phone" gorm:"unique"`
-	Email      string `json:"email" gorm:"type:varchar(50); unique"`
+	Email      string `json:"email" gorm:"type:varchar(50)"`
 	AccountId  int    `json:"account-id" gorm:"unique"`
 }
