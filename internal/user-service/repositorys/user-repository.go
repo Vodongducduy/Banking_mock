@@ -11,6 +11,8 @@ import (
 type IUserRepository interface {
 	CreateUser(user *models.User) (*models.User, error)
 	GetUser(dto *dtos.GetUserByPhone) (*models.User, error)
+
+	GetAll() (*[]models.User, error)
 }
 
 type UserRepository struct {
@@ -36,6 +38,11 @@ func (u *UserRepository) GetUser(dto *dtos.GetUserByPhone) (*models.User, error)
 	return user, nil
 }
 
+func (u *UserRepository) GetAll() (*[]models.User, error) {
+	var users []models.User
+	err := u.db.Find(&users).Error
+	return &users, err
+}
 func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }

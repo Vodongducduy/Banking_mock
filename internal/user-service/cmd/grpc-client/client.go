@@ -18,7 +18,7 @@ func NewGRPCAuthClient() *GRPCAuthClient {
 }
 
 func (G *GRPCAuthClient) SetUpCAuthClient() auth.IsAuthClient {
-	addr := "localhost:" + config.GrpcAuthPort
+	addr := "localhost" + config.GrpcAuthPort
 	conn, diaErr := grpc.Dial(addr, grpc.WithInsecure())
 	if diaErr != nil {
 		customResponse.FailErr("SetUpClientUser: fail connecting to sever", diaErr)

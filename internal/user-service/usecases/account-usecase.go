@@ -11,6 +11,7 @@ import (
 type IAccountUsecase interface {
 	CreateAccount(dto *dtos.CreateAccountDTO) (*models.Account, error)
 	GetAccount(dto *dtos.GetAccountByIdDTO) (*models.Account, error)
+	GetAccountById(id int) (*models.Account, error)
 }
 type AccountUsecase struct {
 	AccountRepository repositorys.IAccountRepository
@@ -53,6 +54,9 @@ func (a *AccountUsecase) GetAccount(dto *dtos.GetAccountByIdDTO) (*models.Accoun
 
 }
 
+func (a *AccountUsecase) GetAccountById(id int) (*models.Account, error) {
+	return a.AccountRepository.GetAccountById(id)
+}
 func NewAccountUsecase(accountRepository repositorys.IAccountRepository, userRepository repositorys.IUserRepository) *AccountUsecase {
 	return &AccountUsecase{AccountRepository: accountRepository, UserRepository: userRepository}
 }

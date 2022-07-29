@@ -28,12 +28,16 @@ func main() {
 	authClient := grpcClient.SetUpCAuthClient()
 	//DI User
 	userRepo := repositorys.NewUserRepository(database.Instance)
+	userUC := usecases.NewUserUsecase(userRepo)
+	userCtrl := controllers.NewUserController(userUC)
 
 	//DI Account
 	accountRepo := repositorys.NewAccountRepository(database.Instance)
 	accountUsecase := usecases.NewAccountUsecase(accountRepo, userRepo)
 	accountCtr := controllers.NewAccountController(accountUsecase)
-	accountEndpoint := endpoints.NewAccountEndpoint(r, accountCtr)
+
+	//endpoint
+	accountEndpoint := endpoints.NewAccountEndpoint(r, accountCtr, userCtrl, authClient)
 	accountEndpoint.SetUp()
 	if err := r.Run(":3030"); err != nil {
 		log.Println("Connect to port fail", err)

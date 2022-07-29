@@ -4,6 +4,7 @@ import (
 	"banking/internal/user-service/dtos"
 	"banking/internal/user-service/models"
 	"banking/packages/customResponse"
+	"errors"
 	"gorm.io/gorm"
 	"log"
 )
@@ -11,6 +12,7 @@ import (
 type IAccountRepository interface {
 	CreateAccount(account *models.Account) (*models.Account, error)
 	GetAccount(dto *dtos.GetAccountByIdDTO) (*models.Account, error)
+	GetAccountById(id int) (*models.Account, error)
 }
 
 type AccountRepository struct {
@@ -40,6 +42,19 @@ func (u *AccountRepository) GetAccount(dto *dtos.GetAccountByIdDTO) (*models.Acc
 	return account, nil
 }
 
+func (u *AccountRepository) GetAccountById(id int) (*models.Account, error) {
+	var account models.Account
+	var count int64
+	err := u.db.Where("id = ?", id).Find(&account).Count(&count).Error
+	if err != nil {
+		return nil, err
+	}
+	if count == 0 {
+		return nil, errors.New("record not found")
+	}
+
+	return &account, err
+}
 func NewAccountRepository(db *gorm.DB) *AccountRepository {
 	return &AccountRepository{db: db}
 }

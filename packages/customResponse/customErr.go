@@ -11,13 +11,12 @@ func FailErr(msg string, err error) {
 	}
 }
 
-func FailRespondAPI(c *gin.Context, status int, msg string, err error) {
+func FailRespondAPI(c *gin.Context, status int, msg string, err interface{}) {
 	if err != nil {
 		c.JSON(status, gin.H{
 			"Message": msg,
 		})
 		log.Println("Error to ", err)
 		c.Abort()
-		return
 	}
 }

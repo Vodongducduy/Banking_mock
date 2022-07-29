@@ -3,6 +3,7 @@ package middleware
 import (
 	"banking/packages/customResponse"
 	"errors"
+	"fmt"
 	"github.com/golang-jwt/jwt"
 	"time"
 )
@@ -29,6 +30,8 @@ func GenerateTokenJWT(phone string, accountID int, role string) (string, error) 
 			ExpiresAt: ONE_HOUR_FROM_NOW,
 		},
 	}
+
+	fmt.Println("claims", claims.StandardClaims)
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
 	customResponse.FailErr("GenerateTokenJWT: Generate token fail to signed", err)
