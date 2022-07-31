@@ -9,6 +9,7 @@ import (
 type Account struct {
 	gorm.Model    `json:"-"`
 	AccountNumber string `json:"account-number"`
+	Balance		int 	`json:"-" gorm:"default:0"`
 	Password      string `json:"password"`
 	Role          string `json:"role-id" gorm:"default:user"`
 }
