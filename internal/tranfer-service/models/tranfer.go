@@ -1,14 +1,10 @@
 package models
 
-import (
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
-	"log"
-)
+import "gorm.io/gorm"
 
-type Tranfer struct{
-	gorm.Model `json:"-"`
+type Tranfer struct {
+	gorm.Model    `json:"-"`
 	FromAccountID int `json:"from-account-id"`
-	ToAccountID int `json:"to-account-id"`
-	Amount int `json:"amount"`
+	ToAccountID   int `json:"to-account-id"`
+	Amount        int `json:"amount"`
 }

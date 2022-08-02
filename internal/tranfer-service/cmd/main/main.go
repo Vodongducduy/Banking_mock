@@ -1,12 +1,10 @@
 package main
 
 import (
-	grpc_client "banking/internal/user-service/cmd/grpc-client"
-	"banking/internal/user-service/controllers"
-	"banking/internal/user-service/database"
-	"banking/internal/user-service/endpoints"
-	"banking/internal/user-service/repositorys"
-	"banking/internal/user-service/usecases"
+	"banking/internal/tranfer-service/cmd/qServer"
+	"banking/internal/tranfer-service/database"
+	"banking/internal/tranfer-service/repositorys"
+	"banking/internal/tranfer-service/usecases"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -24,22 +22,15 @@ func main() {
 	database.Migrate()
 	r := route()
 
-	grpcClient := grpc_client.NewGRPCAuthClient()
-	authClient := grpcClient.SetUpCAuthClient()
-	//DI User
-	userRepo := repositorys.NewUserRepository(database.Instance)
-	userUC := usecases.NewUserUsecase(userRepo)
-	userCtrl := controllers.NewUserController(userUC)
+	//DI Transfer
+	tranferRepo := repositorys.NewTranferRepository(database.Instance)
+	tranferUsecase := usecases.NewTranferUsecase(tranferRepo)
+	tranferMq := qServer.NewTransferMQ(tranferUsecase)
 
-	//DI Account
-	accountRepo := repositorys.NewAccountRepository(database.Instance)
-	accountUsecase := usecases.NewAccountUsecase(accountRepo, userRepo)
-	accountCtr := controllers.NewAccountController(accountUsecase)
+	//MQServer
+	go tranferMq.Consumer()
 
-	//endpoint
-	accountEndpoint := endpoints.NewAccountEndpoint(r, accountCtr, userCtrl, authClient)
-	accountEndpoint.SetUp()
-	if err := r.Run(":3030"); err != nil {
+	if err := r.Run(":3031"); err != nil {
 		log.Println("Connect to port fail", err)
 	}
 	log.Println("Connect to  DB success")

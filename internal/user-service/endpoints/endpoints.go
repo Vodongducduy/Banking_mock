@@ -35,6 +35,7 @@ func (a *AccountEndpoint) SetUp() {
 	userApi := a.Route.Group("api/user")
 	{
 		userApi.GET("/", middlewareUser.CheckLogin(), a.UserController.GetAll)
+		userApi.POST("/transfer", middlewareUser.CheckLogin(), a.UserController.UserTransfer)
 	}
 
 }
